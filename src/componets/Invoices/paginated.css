@@ -1,0 +1,25 @@
+.react-paginate li {
+    transition: all .2s ease;
+}
+
+.react-paginate li:hover {
+  transform: scale(1.5);
+  text-shadow: 3px 4px 2px #c8c5c58e;
+}
+
+.react-paginate-active{
+  display: block;
+  color: white ;
+  text-align: center;
+  transform: scale(1.3);
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  background: #7C5DFA;
+  transition: all .2s ease;
+  text-shadow: none;
+}
+
+.react-paginate-dark:hover {
+text-shadow: 3px 4px 2px #000000;
+}

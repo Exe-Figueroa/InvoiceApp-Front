@@ -1,0 +1,17 @@
+@media (min-width: 640px) {
+  .calc{
+    height: calc(100vh - 80px);
+  }
+  .calcForm{
+    height: calc(100vh - 250px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .calc{
+    height: calc(100vh - 200px);
+  }
+  .calcForm{
+    height: calc(100vh - 180px);
+  }
+}

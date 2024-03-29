@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "League Spartan", sans-serif;
+}
+.label-input{
+  @apply text-07 font-medium text-spartanS;
+}
+.input{
+  @apply p-4 rounded-md outline-05 outline outline-1 text-08 font-bold text-spartanS w-full;
+}
+
+.inputValidator{
+  @apply border-r-2 border-b-2 border-r-red-500 border-b-red-500 ;
+}
+.textValidator{
+  @apply text-red-500 ;
+}
+
+
+
+::-webkit-scrollbar {
+  width: 8px;
+background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #373B53; 
+  border-radius: 5px; 
+  transition: all 5s ease;
+}
+
+
+
+::-webkit-scrollbar-track {
+  background-color: none;
+  padding: 0 5px;
+}
+
+
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #cecfd5; 
+
+}
