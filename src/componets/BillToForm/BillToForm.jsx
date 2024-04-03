@@ -3,8 +3,11 @@ import { DataProvider } from "../../DataContext/DataContextProvider";
 import { InputSection } from "../InputSection/InputSection";
 import axios from "axios";
 import { baseURL } from "../../../config/config";
+import { useNavigate } from "react-router-dom";
+
 
 export const BillToFrom = () => {
+  const navigate = useNavigate();
   const { billToChange, formData, clients, setFormData, setClients } = useContext(DataProvider);
 
   const storedToken = localStorage.getItem('accessToken');
@@ -15,7 +18,9 @@ export const BillToFrom = () => {
         const { data } = await axios.get(`${baseURL}/clients`, { headers: { Authorization: `Bearer ${storedToken}` } });
         setClients(data)
       } catch (error) {
-        console.error('ERROR!!', error);
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        }
       }
     }
     fetchClients()
@@ -25,7 +30,6 @@ export const BillToFrom = () => {
 
   const filterClient = (e)=>{
     const selectedClient = clients.find(client =>  client.clientName === e.target.value);
-    console.log({selectedClient});
     if (!selectedClient) {
       billToChange(e)
     }else{

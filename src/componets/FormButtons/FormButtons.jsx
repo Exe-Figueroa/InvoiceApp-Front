@@ -4,7 +4,7 @@ import { DataProvider } from "../../DataContext/DataContextProvider"
 import { useNavigate } from 'react-router-dom';
 
 export const FormButtons = ({ cancelBtn }) => {
-  const { isEdit, setIsActive, createInvoice, createInvoiceDraft, formData, updateInvoice} = useContext(DataProvider);
+  const { isEdit, setIsActive, createInvoice, createInvoiceDraft, formData, updateInvoice, errorForm } = useContext(DataProvider);
   const navigate = useNavigate();
   
   
@@ -44,11 +44,13 @@ const saveAndSendBtn = () => {
           <button 
           onClick={createInvoiceDraft}
           type='button'
-            className={`${isEdit ? 'hidden' : ''} w-full py-3 text-nowrap px-4 rounded-full bg-[#373B53] text-06 font-bold dark:bg-[#373B53] dark:text-white`}
+          disabled={errorForm}
+            className={`${isEdit ? 'hidden' : ''} w-full py-3 text-nowrap px-4 rounded-full bg-[#373B53] text-06 font-bold dark:bg-[#373B53] dark:text-white transition ${errorForm && "opacity-70"}`}
           >Save as Draft</button>
           <button
+            disabled={errorForm}
             type='button'
-            className='w-full py-3 text-nowrap px-4 rounded-full bg-01 text-white font-bold'
+            className={`w-full py-3 text-nowrap px-4 rounded-full bg-01 text-white font-bold transition ${errorForm && "opacity-70"}`}
             onClick={saveAndSendBtn()}
           >Save & Send</button>
         </section>

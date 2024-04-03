@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Validator } from "../../utils/regexValidator";
 import { DataProvider } from "../../DataContext/DataContextProvider";
 const regexValidator = new Validator();
 
-export const InputSection = ({ name, placeholder, onChange, textLabel, value, index, messageValidator, list, messageValidatorList, error }) => {
-  const [isValid, setIsvalid] = useState(true);
-  const { isCorrect } = useContext(DataProvider);
+export const InputSection = ({ name, placeholder, onChange, textLabel, value, index, messageValidator, list, messageValidatorList, error, filterItems }) => {
+  const { setErrorForm } = useContext(DataProvider);
+  const [isValid, setIsvalid] = useState(true);  
 
   const validateInput = (e) => {
     const { value } = e.target;
@@ -55,6 +55,16 @@ export const InputSection = ({ name, placeholder, onChange, textLabel, value, in
     }
   }
 
+  useEffect(() => {
+    
+    if (!isValid || error) {
+      setErrorForm(true)
+    }else {
+      setErrorForm(false)
+    }
+  },[isValid, error])
+  
+  
   return (
     <div className='w-full flex flex-col gap-1 mb-6 relative'>
       <label
@@ -68,10 +78,12 @@ export const InputSection = ({ name, placeholder, onChange, textLabel, value, in
         className={`input dark:outline-none dark:focus:outline-white dark:bg-04 dark:text-white ${(!isValid || error)? "inputValidator" : "" }`}
         placeholder={placeholder}
         onChange={validateInput}
+        onClick={filterItems}
         value={value}
         list={list}
       />
-      <p className="textValidator absolute -bottom-6">{!isValid && messageValidator}{error && messageValidatorList}</p>
+      <p className="textValidator absolute -bottom-6">{!isValid && messageValidator}{error && messageValidatorList} </p>
+      
     </div>
   )
 };

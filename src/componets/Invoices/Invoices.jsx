@@ -9,7 +9,6 @@ import { NoneInvoices } from "../NoneInvoices/NoneInvoices";
 export const Invoices = ({ searchValueFilter, currentItems }) => {
   // const { data } = useContext(DataProvider);
 
-  const filteredData = searchValueFilter.length ? searchValueFilter : currentItems;
   if (searchValueFilter.length === 0 && currentItems?.length === 0) {
     return (
       <NoneInvoices />
@@ -17,7 +16,7 @@ export const Invoices = ({ searchValueFilter, currentItems }) => {
   } else {
     return (
       <>
-      { filteredData.map((invoice) => { 
+      { currentItems.map((invoice) => { 
         const  prices = invoice?.items?.map((item) => item.total)
         const totalPrices = prices?.length > 0 ? prices.reduce((prev, sum) => { return prev + sum}) : [0]
 

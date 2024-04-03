@@ -3,7 +3,7 @@ import { DataProvider } from "../../DataContext/DataContextProvider";
 import { InputSection } from "../InputSection/InputSection";
 
 export const BillFromForm = () => {
-  const { billFromChange, formData, isEdit } = useContext(DataProvider);
+  const { billFromChange, formData, isEdit, setErrorForm } = useContext(DataProvider);
   return (
     <>
       <h2 className='text-spartanL font-bold text-08 px-6 dark:text-white'>{isEdit ? `Edit #${formData.id}` :'New Invoice'}</h2>

@@ -17,6 +17,7 @@ export const DataContextProvider = ({ children }) => {
   const [userAuth, setUserAuth] = useState({ token: '' })
   const [request, setRequest] = useState('')
   const [error, setError] = useState({ error: '' })
+  const [errorForm, setErrorForm] = useState(false)
   const [clients, setClients] = useState([])
   const navigate = useNavigate();
   const [searchValueFilter, setSearchValueFilter] = useState([]);
@@ -40,13 +41,10 @@ export const DataContextProvider = ({ children }) => {
         navigate('/');
       }, 2000);
     } catch (e) {
-      console.log({ e });
       if (e.response.data.message === 'USER_NOT_FOUND') {
         setError({ error: 'Email incorrect' })
       } else if (e.response.data.message === 'PASSWORD_INCORRECT') {
         setError({ error: 'Passport incorrect' })
-      } else {
-        console.log('usuario correcto');
       }
     }
   }
@@ -141,7 +139,6 @@ export const DataContextProvider = ({ children }) => {
   const createInvoice = async () => {
     loadingNotify('Creating invoice');
     try {
-      console.log({ formData });
       const { status } = await axios.post(`${baseURL}/invoices`, formData, {
         headers: { Authorization: `Bearer ${userAuth.token}` }
       });
@@ -151,7 +148,6 @@ export const DataContextProvider = ({ children }) => {
         notify('Invoice created!!', 'success');
       }
     } catch (error) {
-      console.log({ error });
       notify('Bad request. Please try again later', 'error');
       if (error.response && error.response.status === 401) {
         navigate('/login');
@@ -167,10 +163,8 @@ export const DataContextProvider = ({ children }) => {
       itemsToUpdate.push({...itemFiltered, quantity: formData.items[i].quantity});
     }
     
-    console.log({itemsToUpdate, itemList});
     try {
-      Promise.all(itemsToUpdate.map(item=> axios.patch(`${baseURL}/items/${item._id}`, item, {headers: {Authorization: `Bearer ${userAuth.token}`}})))
-        .then(res => console.log({res}));
+      Promise.all(itemsToUpdate.map(item=> axios.patch(`${baseURL}/items/${item._id}`, item, {headers: {Authorization: `Bearer ${userAuth.token}`}})));
     } catch (error) {
       console.log({error});
     }
@@ -213,7 +207,6 @@ export const DataContextProvider = ({ children }) => {
 
 
     } catch (error) {
-      console.log(error);
       notify('Bad request. Please try again later', 'error');
       if (error.response && error.response.status === 401) {
         navigate('/login');
@@ -371,6 +364,8 @@ export const DataContextProvider = ({ children }) => {
       setSearchValueFilter,
       items, 
       setItems,
+      setErrorForm,
+      errorForm,
     }}>
       {children}
     </DataProvider.Provider>
