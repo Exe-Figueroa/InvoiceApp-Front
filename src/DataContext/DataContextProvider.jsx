@@ -41,11 +41,9 @@ export const DataContextProvider = ({ children }) => {
         navigate('/');
       }, 2000);
     } catch (e) {
-      if (e.response.data.message === 'USER_NOT_FOUND') {
-        setError({ error: 'Email incorrect' })
-      } else if (e.response.data.message === 'PASSWORD_INCORRECT') {
-        setError({ error: 'Passport incorrect' })
-      }
+      if (e.response.data.message === 'USER_NOT_FOUND' || e.response.data.message === 'PASSWORD_INCORRECT') {
+        setError({ error: 'Email incorrect o Passport incorrect' })
+      } 
     }
   }
 

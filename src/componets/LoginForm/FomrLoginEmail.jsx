@@ -33,8 +33,8 @@ export const FormLoginEmail = ({isValid, setIsValid, value }) => {
       value={value}
       autoComplete="email"
       onChange={validateInput}
-      className={`input dark:outline-none transition duration-200 dark:focus:outline-white dark:bg-04 dark:text-white ${!isValid || error.error === 'Email incorrect' ? "inputValidator" : "" } `}/>
-      <p className="textValidator">{!isValid && 'Please enter a valid email.'}{error.error === 'Email incorrect' && "Sorry, we can't find an user with this email address"}</p>
+      className={`input dark:outline-none transition duration-200 dark:focus:outline-white dark:bg-04 dark:text-white ${!isValid || error.error === 'Email incorrect o Passport incorrect' ? "inputValidator" : "" } `}/>
+      <p className="textValidator">{!isValid && 'Please enter a valid email.'}{error.error === 'Email incorrect o Passport incorrect' && "Email or Password incorrect"}</p>
       
     </div>
     

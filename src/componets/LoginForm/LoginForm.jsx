@@ -12,7 +12,7 @@ export const LoginForm = () => {
   <>
   <section className="max-w-[500px] m-auto pt-[120px]">
     <div className="w-full bg-white py-8 px-10  rounded-xl hover:shadow-md dark:bg-03" >
-      <h1 className="text-black font-bold text-spartanL  dark:text-07">Sing In</h1>
+      <h1 className="text-black font-bold text-spartanL  dark:text-07">Log In</h1>
       <form autoComplete="email"  action="#" 
       onSubmit={(e) => {
         e.preventDefault(),
@@ -23,7 +23,6 @@ export const LoginForm = () => {
         <BtnLogin/>
       </form>
     </div>
-    
   </section>
   </>
   )
