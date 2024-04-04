@@ -135,6 +135,7 @@ export const DataContextProvider = ({ children }) => {
 
 
   const createInvoice = async () => {
+    console.log({formData});
     loadingNotify('Creating invoice');
     try {
       const { status } = await axios.post(`${baseURL}/invoices`, formData, {
