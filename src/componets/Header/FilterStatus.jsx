@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DataProvider } from "../../DataContext/DataContextProvider";
 
 export const FilterStatus = ({setSearchValueFilter}) => {
-  const {data}=useContext(DataProvider)
+  const {data, setRequest}=useContext(DataProvider)
   
   const openSelect = () => {
     const selectOptions = document.querySelector("#InvoicesFilter");   
@@ -15,7 +15,7 @@ export const FilterStatus = ({setSearchValueFilter}) => {
       svgRowSelect.classList.remove("rotate-180")
     }
   } 
-
+  
   const [searchValue, setSearchValue] = useState({
     paid: false,
     pending: false,

@@ -14,7 +14,7 @@ import { DeleteBtn } from "../componets/DeleteBtn/DeleteBtn"
 import { Form } from "../componets/Form/Form";
 export const InvoiceDetails = () => {
 
-    const { data, setSeeModal, seeModal } = useContext(DataProvider);
+    const { data, setSeeModal, seeModal, userAuth} = useContext(DataProvider);
 
     const { id } = useParams()
 
@@ -53,7 +53,7 @@ export const InvoiceDetails = () => {
                 </div>
                 {seeModal && <DeleteBtn id={id} />}
             </section>
-            <Form />
+           {userAuth.token && <Form />}
         </>
     )
 }

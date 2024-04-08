@@ -16,7 +16,7 @@ export const BillFromForm = () => {
           textLabel={'Street Address'}
           onChange={billFromChange}
           value={formData?.user?.street || ''}
-          messageValidator={'Cannot contain symbols,it starts with numbers followed by letters.'}
+          messageValidator={'Must only insert numbers followed by letters.'}
         />
         <div className='w-full flex gap-x-6'>
           <InputSection

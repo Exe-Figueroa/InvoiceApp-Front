@@ -89,12 +89,12 @@ export const ProductItem = ({ index, updateItems, item, deleteItem, filterItems,
       <section className="flex items-center justify-between gap-2">
         <InputItem name={'quantity'} placeholder={'Qty'} textLabel={'Qty.'} value={item.quantity} onUpdateProduct={onUpdateProduct} max={productValue.maxQuantity} />
         <InputItem name={'price'} placeholder={'Price'} textLabel={'Price'} value={item.price} onUpdateProduct={onUpdateProduct} />
-        <div className='w-full flex flex-col gap-1 mb-6'>
+        <div className='w-[125px] lg:w-[200px]  flex flex-col gap-1 mb-6'>
           <span className='label-input'>Total</span>
-          <div className="w-full flex justify-between items-center py-2">
-            <span className='font-bold text-spartanS border-0 text-06 pt-2'>{productValue.total}</span>
+          <div className="w-full  flex justify-between items-center py-2">
+            <span className='mr-2 overflow-hidden font-bold text-spartanS border-0 text-06 pt-2'>{productValue.total}</span>
             <button type="button" onClick={() => deleteItem(index)}>
-              <img src={deleteIcon} alt="Delete button Image" />
+            <svg width="13" height="16" xmlns="http://www.w3.org/2000/svg"><path className=" hover:fill-red-500 transition ease-in"  d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z" fill="#888EB0" fillRule="nonzero"/></svg>
             </button>
           </div>
         </div>

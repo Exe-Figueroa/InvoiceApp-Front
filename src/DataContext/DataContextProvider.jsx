@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 import { baseURL } from '../../config/config';
@@ -22,24 +22,31 @@ export const DataContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [searchValueFilter, setSearchValueFilter] = useState([]);
   const [items, setItems] = useState([]);
-
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [intervalId, setIntervalId] = useState(null)
   useEffect(() => {
     setError({ error: '' })
   }, [userData])
 
   const login = async () => {
     try {
-      const { data: { accessToken, refreshToken } } = await axios.post(`${baseURL}/auth`, userData);
+      const { data: { accessToken, refreshToken, tokenExp } } = await axios.post(`${baseURL}/auth`, userData);
       setUserAuth({ token: accessToken });
+      const now = Math.floor(Date.now() / 1000);
+
+      // Calcular el tiempo restante en segundos
+      const tiempoRestanteSegundos = tokenExp.exp - now;
+    
       localStorage.removeItem('accessToken', accessToken)
 
       localStorage.setItem('accessToken', accessToken)
       localStorage.setItem('refreshToken', refreshToken)
+      localStorage.setItem('accessTokenExpiration', tiempoRestanteSegundos)
 
       setTimeout(() => {
         navigate('/');
-      }, 2000);
+        setIsLoggedIn(true)
+      }, 1000);
     } catch (e) {
       if (e.response.data.message === 'USER_NOT_FOUND' || e.response.data.message === 'PASSWORD_INCORRECT') {
         setError({ error: 'Email incorrect o Passport incorrect' })
@@ -47,50 +54,62 @@ export const DataContextProvider = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    const checkAccessTokenExpiration = async () => {
-      const accessTokenExpiration = localStorage.getItem('accessTokenExpiration');
-      if (accessTokenExpiration && Date.now() >= parseInt(accessTokenExpiration, 10)) {
-        try {
-          const storedRefreshToken = localStorage.getItem('refreshToken');
-          const { data: { accessToken, expiration } } = await axios.post(`${baseURL}/auth/refresh-token`, { refreshToken: storedRefreshToken });
-
-          localStorage.setItem('accessToken', accessToken);
-
-          localStorage.setItem('accessTokenExpiration', expiration);
-        } catch (error) {
-          navigate('/login')
-        }
-      }
-    };
-
-    const interval = setInterval(checkAccessTokenExpiration, 540000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('accessToken');
     if (storedToken) {
       setUserAuth({ token: storedToken });
+      setIsLoggedIn(true)
     }
   }, []);
 
-  useEffect(() => {
-    if (userAuth.token || request) {
-      Promise.all([
-        axios.get(`${baseURL}/invoices`, {
-          headers: { Authorization: `Bearer ${userAuth.token}` }
-        }),
-        axios.get(`${baseURL}/invoices/drafts`, { headers: { Authorization: `Bearer ${userAuth.token}` } })
-      ]).then(([res1, res2]) => {
-        setData([...res1.data, ...res2.data]);
-      }).catch(e => {
-        if (e.response && e.response.status === 401) {
+  const validateToken = ()=>{
+    let counter = 0;
+    const checkAccessTokenExpiration = async () => {
+      counter = counter + 1800;
+      const accessTokenExpiration = await localStorage.getItem('accessTokenExpiration');
+      let tokenParc = parseInt(accessTokenExpiration, 10);
+      const now = Math.floor(Date.now() / 1000);
+      if ( accessTokenExpiration && counter >=  (tokenParc - 1800) ) {
+        try {
+          counter = 0;
+          const storedRefreshToken = await localStorage.getItem('accessToken');
+          const { data: { accessToken, refreshToken, expiration } } = await axios.post(`${baseURL}/auth/refresh-token`, { token: storedRefreshToken });
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('refreshToken', refreshToken);
+  
+          const timeTokenRefresh = expiration.exp - now;
+  
+          localStorage.setItem('accessTokenExpiration', timeTokenRefresh);
+          clearInterval(intervalId);
+        } catch (error) {
           navigate('/login');
         }
-      })
-    }
-  }, [userAuth.token, request]);
+      }
+    };
+    const interval = setInterval(checkAccessTokenExpiration, 1800000);
+    setIntervalId(interval)
+  }
+
+    
+    
+  useEffect(() => {
+    setTimeout(() => {
+      if (location.hash !== "#/login" && location.hash === "#/") {
+        if (intervalId === null) {
+          validateToken()
+        } 
+      } else if(location.hash === "#/login") {
+        setIsLoggedIn(false)
+        setIntervalId(null);
+        clearInterval(intervalId);
+      } 
+    }, 1001);
+  }, [location.hash]);
+
+  
+
+  
 
   const deleteInvoice = async (id) => {
     loadingNotify('Deleting invoice')
@@ -100,7 +119,7 @@ export const DataContextProvider = ({ children }) => {
 
       setSeeModal(false);
       setRequest(`${Math.random()}`)
-
+      setSearchValueFilter([])
       if (status === 200) {
         setTimeout(() => {
           notify('Invoice deleted!!', 'success');
@@ -121,6 +140,7 @@ export const DataContextProvider = ({ children }) => {
       navigate('/');
       setRequest(`${Math.random()}`)
       setSeeModal(false);
+      setSearchValueFilter([])
       if (status === 200) {
         setTimeout(() => {
           notify('Draft deleted!!', 'success');
@@ -135,7 +155,6 @@ export const DataContextProvider = ({ children }) => {
 
 
   const createInvoice = async () => {
-    console.log({formData});
     loadingNotify('Creating invoice');
     try {
       const { status } = await axios.post(`${baseURL}/invoices`, formData, {
@@ -165,7 +184,7 @@ export const DataContextProvider = ({ children }) => {
     try {
       Promise.all(itemsToUpdate.map(item=> axios.patch(`${baseURL}/items/${item._id}`, item, {headers: {Authorization: `Bearer ${userAuth.token}`}})));
     } catch (error) {
-      console.log({error});
+      console.error(error);
     }
   }
   const updateInvoice = async () => {
@@ -178,8 +197,8 @@ export const DataContextProvider = ({ children }) => {
         delete noIdData.createdAt
         delete noIdData.status
         delete noIdData.__v
-        noIdData.paymentTerms = formData.paymentTerms || 1
-
+        noIdData.items.forEach((item)=> delete item._id)
+        noIdData.paymentTerms = formData.paymentTerms || 1;
         const { status } = await axios.post(`${baseURL}/invoices`, noIdData, {
           headers: { Authorization: `Bearer ${userAuth.token}` }
         });
@@ -255,6 +274,7 @@ export const DataContextProvider = ({ children }) => {
         });
         setIsActive(false);
         setRequest(`${Math.random()}`);
+        setSearchValueFilter([])
         if (status === 200) {
           navigate('/');
           notify('Invoice paid!!', 'success');
@@ -365,8 +385,14 @@ export const DataContextProvider = ({ children }) => {
       setItems,
       setErrorForm,
       errorForm,
+      isLoggedIn,
+      setUserAuth,
+      setRequest,
+      request,
+      setData
     }}>
       {children}
     </DataProvider.Provider>
   );
 };
+

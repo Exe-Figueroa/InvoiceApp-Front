@@ -14,7 +14,7 @@ export const InputItem = ({ name, placeholder, textLabel, value, onUpdateProduct
   },[value])
 
   return (
-    <div className='w-full flex flex-col gap-1 mb-6 relative'>
+    <div className='w-[125px] lg:w-[200px] flex flex-col gap-1 mb-6 relative'>
       <label
         className='label-input dark:text-05'
       >{textLabel}</label>
@@ -29,7 +29,7 @@ export const InputItem = ({ name, placeholder, textLabel, value, onUpdateProduct
         min={0}
         
       />
-      <p className="textValidator absolute font-semibold -bottom-6">{value > max && `Your max stock is: ${max}`}</p>
+      <p className="textValidator absolute font-semibold -bottom-6">{value > max && `Max stock: ${max}`}</p>
     </div>
   );
 }

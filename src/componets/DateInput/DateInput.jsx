@@ -15,7 +15,6 @@ export const DateInput = () => {
   }
   const seeCalendar = () => {
     const createdAt = document.getElementById('createdAt');
-    console.log(createdAt);
     createdAt.click();
   }
   return (

@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import { Home } from './routes/Home'
 import { InvoiceDetails } from './routes/InvoiceDetails.jsx'
 import { DataContextProvider } from './DataContext/DataContextProvider.jsx'
@@ -13,6 +13,7 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/login' element={<Login/>}/>
             <Route path='/details/:id' element={<InvoiceDetails />} />
+            <Route path='/*' element={<Home />} />
           </Routes>
         </DataContextProvider>
       </HashRouter>
@@ -22,3 +23,4 @@ function App() {
 }
 
 export default App
+

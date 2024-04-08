@@ -36,8 +36,10 @@ export const ItemsContainer = () => {
         filterItems(data);
         setItemDB(data);
       } catch (error) {
-        navigate("/login")
-        console.log({error});
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        }
+        console.error({error});
       }
     }
     if (userAuth.token || requestItems) {
@@ -81,7 +83,7 @@ export const ItemsContainer = () => {
         />
       ))}
       <button
-        className={`w-full h-12 text-07 font-bold text-spartanS w-8/10 bg-[#F9FAFE] dark:bg-04 dark:text-05 ${itemDB.length <= itemList.length  ? 'hidden' : ''}`}
+        className={`w-full lg:w-[616px] h-12 text-07 font-bold text-spartanS w-8/10 bg-[#F9FAFE] dark:bg-04 dark:text-05 ${itemDB.length <= itemList.length  ? 'hidden' : ''}`}
         onClick={generateItem}
         type="button"
       >+Add New Item</button>

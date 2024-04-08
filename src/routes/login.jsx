@@ -1,8 +1,13 @@
 import { LoginForm } from "../componets/LoginForm/LoginForm"
-import avatar from "../assets/favicon-32x32.png"
 import { NavbarLogin } from "../componets/LoginForm/NavbarLogin/NavbarLogin"
+import { useContext, useEffect } from "react"
+import { DataProvider } from "../DataContext/DataContextProvider"
 
 export const Login = () => {
+  const {setUserAuth} = useContext(DataProvider)
+  useEffect(()=> {
+    setUserAuth({token: null})
+  },[])
   return (
   <>
     <NavbarLogin></NavbarLogin> 

@@ -1,12 +1,12 @@
 import { useContext } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { DataProvider } from "../../DataContext/DataContextProvider"
 
 export const GoBackBtn = ({canGoHome}) => {
-    const { setIsActive } = useContext(DataProvider);
+    const { setIsActive,setSearchValueFilter } = useContext(DataProvider);
     const navigate = useNavigate();
     const clickBackBtn = () => {    
-        
+        setSearchValueFilter([])
         if (!canGoHome) {
             setIsActive(false)
         } else {
